@@ -1,12 +1,14 @@
 {
-    "name":"Textbit",
-    "version":"1.0.0",
-    "type":"module",
-    "main":"app.js",
-    "scripts":{
-        "start":"node app.js"
+    "name": "Textbit",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js"
     },
     "dependencies": {
-        "express":"^4.19.2"
+        "dotenv": "^17.4.2",
+        "express": "^4.19.2",
+        "firebase-admin": "^14.3.0"
     }
 }
