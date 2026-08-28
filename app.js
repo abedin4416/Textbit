@@ -9,16 +9,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(import.meta.dirname, "public")));
 
-if(!admin.apps.length){
-    admin.initializeApp({
-        credential:admin.credential.cert({
-            projectId:process.env.FIREBASE_PROJECT_ID,
-            clientEmail:process.env.FIREBASE_CLIENT_EMAIL,
-            privateKey:process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-        }),
-        databaseURL:process.env.PUBLIC_FIREBASE_DATABASE_URL
-    });
-}
+admin.initializeApp({
+    credential:admin.credential.cert({
+        projectId:process.env.FIREBASE_PROJECT_ID,
+        clientEmail:process.env.FIREBASE_CLIENT_EMAIL,
+        privateKey:process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    }),
+    databaseURL:process.env.PUBLIC_FIREBASE_DATABASE_URL
+});
 
 const db = admin.database();
 
