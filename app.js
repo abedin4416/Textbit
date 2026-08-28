@@ -19,7 +19,6 @@ if (!getApps().length) {
     databaseURL: process.env.PUBLIC_FIREBASE_DATABASE_URL,
   });
 }
-
 const db = getDatabase();
 
 app.get("/config", (req, res)=> {

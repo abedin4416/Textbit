@@ -1,0 +1,86 @@
+:root{
+    --ash: rgb(235,240,250);
+    --black:rgb(50,50,60);
+    --l-black:rgb(70,70,90);
+    --blue:rgb(35, 91, 204);
+}
+
+@font-face {
+    font-family: "gsansflex";
+    src: url("/res/gsansflex.ttf") format("truetype");
+    font-display: swap;
+}
+
+body{font-family: "gsansflex";}
+
+input{
+    width:20rem;
+    height:2.5rem;
+    margin-bottom:0.5rem;
+    border-radius:0.4rem;
+    border:1px solid silver;
+    font-size: 12pt;
+    padding:0 0.5rem 0 0.5rem;
+}
+button, input:focus{outline:none;}
+
+#auth-content{
+    color:var(--black);
+    margin-top:2rem;
+    justify-self: center;
+    display:grid;
+    grid-template-rows: 2.5rem 1fr;
+    justify-content: center;
+}
+
+#auth-level{
+    display:grid;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content:center;
+    font-size:15pt;
+    font-weight:700;
+    column-gap: 0.5rem;
+    user-select: none;
+}
+
+#auth-icon{
+    background: url("res/iconx.png");
+    background-size:100%;
+    background-repeat: no-repeat;
+    width:2.5rem;
+    height:2.5rem;
+}
+
+#auth-form{
+    margin-top:1rem;
+    display:grid;
+    justify-content: center;
+}
+.label{
+    font-weight:bold;
+    margin-bottom:0.2rem;
+    user-select: none;
+}
+#submit{
+    border:none;
+    border-radius:0.4rem;
+    color:white;
+    background:var(--black);
+    height:2.5rem;
+    font-size:13pt;
+    user-select: none;
+}
+#submit:hover{
+    background:var(--l-black);
+}
+
+#auth-alt{
+    display:grid;
+    grid-auto-flow: column;
+    justify-content: center;
+}
+#auth-switch{
+    color:var(--blue);
+    user-select: none;
+}

@@ -1,5 +1,29 @@
 <html>
     <head>
         <title>Textbit</title>
+        <meta name="theme-color" content="white">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" href="styles.css"/>
+        <link rel="icon" href="res/iconx.svg"/>
     </head>
+    <body>
+        <div id="auth-content">
+            <div id="auth-level">
+                <div id="auth-icon"></div>
+                <div id="auth-title">Sign in to Textbit</div>
+            </div>
+            <div id="auth-error"></div>
+            <form id="auth-form">
+                <div class="label" hidden>Fullname</div>
+                <input id="fullname" required disabled hidden/>
+                <div class="label">Username</div>
+                <input id="username" required/>
+                <div class="label">Password</div>
+                <input id="password" type="password" required/>
+                <button id="submit" type="submit">Sign in</button>
+            </form>
+            <div id="auth-alt">or&nbsp<div id="auth-switch">create an account</div></div>
+        </div>
+        <script src="script.js"></script>
+    </body>
 </html>
