@@ -1,17 +1,13 @@
+import "dotenv/config";
 import express from "express";
 import admin from "firebase-admin";
 import path from "path";
 import { fileURLToPath } from "url";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(import.meta.dirname, "public")));
 
 if(!admin.apps.length){
     admin.initializeApp({
@@ -35,8 +31,9 @@ app.get("/config", (req, res)=> {
     });
 });
 
-app.get("*", (req, res)=>{
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(import.meta.dirname, "public", "index.html"));
 });
 
+if (process.env.VERCEL !== '1') app.listen(3000);
 export default app;
