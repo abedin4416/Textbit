@@ -31,7 +31,7 @@ app.get("/config", (req, res)=> {
     });
 });
 
-app.get("/", (req, res) => {
+app.get("*", (req, res) => {
     res.sendFile(path.join(import.meta.dirname, "public", "index.html"));
 });
 
