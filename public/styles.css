@@ -17,7 +17,7 @@ body{
     padding-inline:0.5rem;
 }
 
-input{
+input, #search-box{
     width:20rem;
     height:2.5rem;
     margin-bottom:0.5rem;
@@ -93,6 +93,8 @@ div{display:grid;}
     grid-template-columns: 2.5rem 1fr 1fr;
     column-gap: 0.5rem;
     width:20rem;
+    font-weight:600;
+    padding-bottom:0.5rem;
 }
 
 #inbox-icon{
@@ -100,4 +102,37 @@ div{display:grid;}
     background-size:100%;
     width:2.5rem;
     height:2.5rem;
+}
+#inbox-option{
+    width:2rem;
+    height:2rem;
+    background-image:url("res/settings.png");
+    background-size:80%;
+    background-repeat:no-repeat;
+    background-position:center;
+    justify-self: end;
+}
+#search{
+    background-image:url("res/search.png");
+    background-size:6%;
+    background-repeat:no-repeat;
+    padding:0;
+    padding-left:2rem;
+    background-position: center left 0.4rem;
+    border:none;
+    width:18rem;
+    margin:0;
+}
+#search-clear{
+    width:2rem;
+    height:2rem;
+    background-image:url("res/close.png");
+    background-size:80%;
+    background-repeat:no-repeat;
+    background-position:center;
+}
+#search-box{
+    padding:0;
+    grid-auto-flow: column;
+    align-items: center;
 }
