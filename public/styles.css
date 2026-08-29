@@ -122,6 +122,7 @@ div{display:grid;}
     border:none;
     margin:0;
     width:auto;
+    background-color:var(--ash);
 }
 #search-clear{
     width:2rem;
@@ -132,10 +133,13 @@ div{display:grid;}
     background-position:center;
 }
 #search-box{
+    margin-top:0.5rem;
     padding:0;
     grid-auto-flow: column;
     align-items: center;
     grid-template-columns: 1fr 2rem;
+    background:var(--ash);
+    border:none;
 }
 
 @media (max-width:45rem){
