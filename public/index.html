@@ -4,10 +4,10 @@
         <meta name="theme-color" content="white">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <link rel="stylesheet" href="styles.css"/>
-        <link rel="icon" href="res/iconx.svg"/>
+        <link rel="icon" href="res/iconx.png"/>
     </head>
     <body>
-        <div id="auth-content">
+        <div id="auth-content" hidden>
             <div id="auth-level">
                 <div id="auth-icon"></div>
                 <div id="auth-title">Sign in to Textbit</div>
@@ -20,10 +20,18 @@
                 <input id="username" required/>
                 <div class="label">Password</div>
                 <input id="password" type="password" required/>
-                <button id="submit" type="submit">Sign in</button>
+                <input id="submit" type="submit" value="Sign in"/>
             </form>
             <div id="auth-alt">or&nbsp<div id="auth-switch">create an account</div></div>
         </div>
+        <div id="inbox-content">
+            <div id="inbox-label">
+                <div id="inbox-icon"></div>
+                <div id="inbox-title">Md Amir Abedin</div>
+                <div id="inbox-option"></div>
+            </div>
+        </div>
+        <div id="chat-content"></div>
         <script src="script.js"></script>
     </body>
 </html>

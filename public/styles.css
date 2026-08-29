@@ -11,7 +11,11 @@
     font-display: swap;
 }
 
-body{font-family: "gsansflex";}
+body{
+    font-family: "gsansflex";
+    color:var(--black);
+    padding:0.5rem;
+}
 
 input{
     width:20rem;
@@ -23,44 +27,42 @@ input{
     padding:0 0.5rem 0 0.5rem;
 }
 button, input:focus{outline:none;}
+div{display:grid;}
+[hidden]{display:none !important;}
 
 #auth-content{
     color:var(--black);
     margin-top:2rem;
     justify-self: center;
-    display:grid;
     grid-template-rows: 2.5rem 1fr;
     justify-content: center;
+    user-select: none;
 }
 
 #auth-level{
-    display:grid;
     grid-auto-flow: column;
     align-items: center;
     justify-content:center;
     font-size:15pt;
     font-weight:700;
     column-gap: 0.5rem;
-    user-select: none;
 }
 
 #auth-icon{
-    background: url("res/iconx.png");
+    background: url("res/iconx.svg");
     background-size:100%;
-    background-repeat: no-repeat;
     width:2.5rem;
     height:2.5rem;
 }
 
 #auth-form{
     margin-top:1rem;
-    display:grid;
     justify-content: center;
+    width:20rem;
 }
 .label{
     font-weight:bold;
     margin-bottom:0.2rem;
-    user-select: none;
 }
 #submit{
     border:none;
@@ -76,11 +78,26 @@ button, input:focus{outline:none;}
 }
 
 #auth-alt{
-    display:grid;
     grid-auto-flow: column;
     justify-content: center;
 }
 #auth-switch{
     color:var(--blue);
-    user-select: none;
+    cursor: pointer;
+}
+
+#inbox-label{
+    grid-auto-flow: column;
+    align-items:center;
+    font-size:13pt;
+    grid-template-columns: 2.5rem 1fr 1fr;
+    column-gap: 0.5rem;
+    width:20rem;
+}
+
+#inbox-icon{
+    background-image: url("res/iconx.svg");
+    background-size:100%;
+    width:2.5rem;
+    height:2.5rem;
 }
