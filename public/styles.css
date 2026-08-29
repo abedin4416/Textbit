@@ -114,14 +114,14 @@ div{display:grid;}
 }
 #search{
     background-image:url("res/search.png");
-    background-size:6%;
+    background-size:1.2rem;
     background-repeat:no-repeat;
     padding:0;
     padding-left:2rem;
     background-position: center left 0.4rem;
     border:none;
-    width:18rem;
     margin:0;
+    width:auto;
 }
 #search-clear{
     width:2rem;
@@ -135,4 +135,14 @@ div{display:grid;}
     padding:0;
     grid-auto-flow: column;
     align-items: center;
+    grid-template-columns: 1fr 2rem;
+}
+
+@media (max-width:45rem){
+    #inbox-label{
+        width:100%;
+    }
+    #search-box{
+        justify-self: center;
+    }
 }
