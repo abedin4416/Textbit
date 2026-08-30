@@ -1,21 +1,27 @@
-function $(a){return document.querySelector("#"+a);}
+function $(a){return document.querySelector("#"+a)}
 function div(a,b,c){return `<div id='${a}' class='${b}'>${c}</div>`;}
 function style(id, cls){$(id).className = "";cls && $(id).classList.add(cls);}
-async function server(api, method = "GET", data = null) {
-    try {
-        const fetchOptions = {
-            method: method.toUpperCase(),
-            headers: {},
-        };
-        if (data && fetchOptions.method !== "GET") {
-            fetchOptions.headers["Content-Type"] = "application/json";
-            fetchOptions.body = JSON.stringify(data);
-        }
-        const res = await fetch(api, fetchOptions);
+async function post(api, data) {
+  try {
+    const res = await fetch(api, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if(!res.ok) return {status:404, msg: "Internal error occured"};
+    return await res.json();
+  }catch(err){
+    return {msg:"Network error"};
+  }
+}
+async function get(api){
+    try{
+        const res = await fetch(api);
         return await res.json();
-    } catch (error) {
-        console.error("Fetch request failed:", error);
-        throw error;
+    }catch(err){
+        return {msg:"Network error"};
     }
 }
 function error(a, b){$(a).textContent = b;style(a, "error");}
+function hide(...elements){elements.forEach(el => el.hidden = true);}
+function show(...elements){elements.forEach(el => el.hidden = false);}

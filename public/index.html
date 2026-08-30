@@ -7,35 +7,50 @@
         <link rel="icon" href="res/iconx.png"/>
     </head>
     <body>
-        <div id="auth-content" hidden>
+        <div id="auth-content">
             <div id="auth-level">
                 <div id="auth-icon"></div>
-                <div id="auth-title">Sign in to Textbit</div>
+                <div id="auth-title">Welcome to Textbit</div>
             </div>
-            <div id="auth-error"></div>
+            <div id="auth-msg"></div>
             <form id="auth-form">
-                <div class="label" hidden>Fullname</div>
-                <input id="fullname" required disabled hidden/>
+                <div id="fn-label" class="label" hidden>Fullname</div>
+                <input id="fullname" hidden/>
                 <div class="label">Username</div>
-                <input id="username" required/>
+                <input id="username"/>
                 <div class="label">Password</div>
-                <input id="password" type="password" required/>
-                <input id="submit" type="submit" value="Sign in"/>
+                <input id="password" type="password"/>
+                <input id="submit" type="submit"/>
             </form>
             <div id="auth-alt">or&nbsp<div id="auth-switch">create an account</div></div>
         </div>
-        <div id="inbox-content">
+        <div id="inbox-content" hidden>
             <div id="inbox-label">
                 <div id="inbox-icon"></div>
-                <div id="inbox-title">Md Amir Abedin</div>
+                <div id="inbox-title"></div>
                 <div id="inbox-option"></div>
             </div>
             <div id="search-box">
-                <input id="search" placeholder="Search for people"/>
+                <input id="search" placeholder="Search for people" spellcheck="false"/>
                 <div id="search-clear" hidden></div>
+            </div>
+            <div id="search-content" hidden>
+                <div id="search-loading">
+                    <div class="dot"></div><div class="dot"></div>
+                    <div class="dot"></div><div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div id="search-result" hidden>
+                    <div id="sr-icon"></div>
+                    <div id="sr-fullname"></div>
+                    <div id="sr-username"></div>
+                    <div id="sr-option"></div>
+                </div>
+                <div id="search-error" hidden></div>
             </div>
         </div>
         <div id="chat-content"></div>
+        <script src="base.js"></script>
         <script src="script.js"></script>
     </body>
 </html>

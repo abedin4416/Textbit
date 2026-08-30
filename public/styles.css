@@ -3,6 +3,7 @@
     --black:rgb(50,50,60);
     --l-black:rgb(70,70,90);
     --blue:rgb(35, 91, 204);
+    --red: rgb(200, 0, 0);
 }
 
 @font-face {
@@ -29,6 +30,7 @@ input, #search-box{
 button, input:focus{outline:none;}
 div{display:grid;}
 [hidden]{display:none !important;}
+.error{color:var(--red);}
 
 #auth-content{
     color:var(--black);
@@ -56,7 +58,7 @@ div{display:grid;}
 }
 
 #auth-form{
-    margin-top:1rem;
+    margin-top:0.5rem;
     justify-content: center;
     width:20rem;
 }
@@ -72,6 +74,7 @@ div{display:grid;}
     height:2.5rem;
     font-size:13pt;
     user-select: none;
+    margin-top:0.5rem;
 }
 #submit:hover{
     background:var(--l-black);
@@ -80,6 +83,10 @@ div{display:grid;}
 #auth-alt{
     grid-auto-flow: column;
     justify-content: center;
+}
+#auth-msg{
+    justify-content: center;
+    margin-top:1rem;
 }
 #auth-switch{
     color:var(--blue);
@@ -114,7 +121,7 @@ div{display:grid;}
 }
 #search{
     background-image:url("res/search.png");
-    background-size:1.2rem;
+    background-size:1.1rem;
     background-repeat:no-repeat;
     padding:0;
     padding-left:2rem;
@@ -128,12 +135,12 @@ div{display:grid;}
     width:2rem;
     height:2rem;
     background-image:url("res/close.png");
-    background-size:80%;
+    background-size:1.3rem;
     background-repeat:no-repeat;
     background-position:center;
 }
 #search-box{
-    margin-top:0.5rem;
+    margin-top:0.3rem;
     padding:0;
     grid-auto-flow: column;
     align-items: center;
@@ -146,8 +153,42 @@ div{display:grid;}
     #inbox-label{
         width:100%;
     }
-    #search-box{
+    #search-box, #search-content{
         justify-self: center;
         width:min(25rem, 100%);
+    }
+}
+
+#search-content{
+    width:20rem;
+}
+
+#search-loading{
+    justify-content: center;
+    grid-auto-flow: column;
+    gap:0.5rem;
+    margin-top:2rem;
+}
+.dot{
+    width:0.5rem;
+    height:0.5rem;
+    background:var(--ash);
+    border-radius:1rem;
+    animation: pulse 1.2s infinite ease-in-out;
+}
+.dot:nth-child(1) { animation-delay: 0.0s; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+.dot:nth-child(4) { animation-delay: 0.6s; }
+.dot:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.4;
+    }
+    50% {
+      transform: scale(1.6);
+      opacity: 1;
     }
 }
