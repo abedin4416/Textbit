@@ -22,6 +22,7 @@ const password = $("password");
 const authmsg = $("auth-msg");
 const authswitch = $("auth-switch");
 const submit = $("submit");
+const inboxcont = $("inbox-content");
 
 search.oninput = ()=> searchclr.hidden = search.value == "";
 
@@ -61,6 +62,8 @@ search.onkeydown = async (e)=>{
 }
 
 function loadInbox(){
+    authForm("hide");
+    show(inboxcont);
     inboxtitle.textContent = user.fullname;
 }
 
@@ -95,8 +98,9 @@ function authForm(path){
 
 async function init(path){
     if(path=="/"){
-        //user = await get("/session");
-        authForm("/");
+        user = await get("/session");
+        if(user.status >= 400) authForm("/");
+        else loadInbox();
     }
     else if(path=="/create") authForm("/create");
 }
