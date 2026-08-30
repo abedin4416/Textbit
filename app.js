@@ -36,7 +36,8 @@ async function insertdb(field, name, data, unique=1){
     return result;
   }catch(err){throw error}
 }
-async function newsession(res, session, username){
+async function newsession(res, username){
+  const session = crypto.randomUUID();
   const expires = new Date(Date.now()+1*24*60*60*1000);
   const data = await insertdb("sessions", session,{
     username:username, expires:expires.toISOString()
@@ -66,18 +67,17 @@ app.post("/search", async (req, res)=>{
     const result = await db.ref(`users/${username}`).once("value");
     if(!username || !result.exists()) return error(res, 404, "User not found");
     const data = result.val();
-    return res.json({status:200,fullname:data.fullname});
+    return res.json({status:200,fullname:data.fullname, profile:data.profile});
   }catch(err){return error(res, 500, "Internal server error");}
 });
 
 app.post("/signup", async (req, res)=>{
   try{
     const {fullname, username, password} = req.body;
-    const session = crypto.randomUUID();
     const hashed = await argon2.hash(password);
     const data = await insertdb("users", username, {fullname: fullname,profile:"default",password:hashed});
     if(!data.committed) return error(res, 400, "Username not available");
-    const sdata = await newsession(res, session, username);
+    const sdata = await newsession(res, username);
     if(sdata) return res.json({status:200});
   }catch(err){return error(res, 500, "Internal server error");}
 });
@@ -86,14 +86,17 @@ app.get("/session", async (req, res)=>{
   try{
     const session = req.cookies?.session;
     if(!session) return error(res, 401, "No session");
-    const result = await db.ref(`sessions/${session}`).once("value");
+    let result = await db.ref(`sessions/${session}`).once("value");
     if(!result.exists()) return error(res, 401, "No session");
-    const data = result.val();
-    const user = (await db.ref(`users/${data.username}`).once("value")).val();
-    return res.json({
+    let data = result.val();
+    const username = data.username;
+    result = (await db.ref(`users/${username}`).once("value"));
+    data = result.val();
+    if(result.exists()) return res.json({
       status:200,
-      username:data.username,
-      fullname:user.fullname
+      username:username,
+      fullname:data.fullname,
+      profile:data.profile
     });
   }catch(err){ error(res, 500, "Internal server error");}
 });
@@ -106,8 +109,7 @@ app.post("/signin", async (req, res)=>{
     const data = result.val();
     const verify = await argon2.verify(data.password, password);
     if(!verify) return error(res, 401, "Invalid credentials");
-    const session = crypto.randomUUID();
-    const sdata = await newsession(res, session, username);
+    const sdata = await newsession(res, username);
     if(sdata) return res.json({status:200});
   }catch(err){error(res, 500, "Internal server error");}
 });

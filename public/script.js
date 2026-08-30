@@ -24,6 +24,21 @@ const authswitch = $("auth-switch");
 const submit = $("submit");
 const inboxcont = $("inbox-content");
 
+let lastColor = null;
+
+function profile(a, b){
+    if(b==="default"){
+        style(a, "default-profile");
+        const color = ["rgb(80, 220, 160)","rgb(160,80,220)","rgb(80,140,240)","rgb(240,90,100)"];
+        let newColor;
+        do{newColor = color[Math.floor(Math.random()*color.length)];}
+        while(newColor === lastColor);
+        lastColor = newColor;
+        $(a).style.backgroundColor = newColor;
+        $(a).style.backgroundImage = "url('res/person.svg')";
+    }
+}
+
 search.oninput = ()=> searchclr.hidden = search.value == "";
 
 searchclr.onclick = ()=>{
@@ -46,6 +61,7 @@ search.onkeydown = async (e)=>{
     if(data.status == 200){
         hide(searchload, searcherr);
         show(searchres);
+        profile("sr-icon", data.profile);
         $("sr-fullname").textContent = data.fullname;
         $("sr-username").textContent = value;
         if(value == user.username){
@@ -64,6 +80,7 @@ search.onkeydown = async (e)=>{
 function loadInbox(){
     authForm("hide");
     show(inboxcont);
+    profile("inbox-icon", user.profile);
     inboxtitle.textContent = user.fullname;
 }
 
@@ -92,7 +109,6 @@ function authForm(path){
             if(data.status >= 400) error("auth-msg", data.msg);
             else window.location.href = "/";
         }
-
     }
 }
 
