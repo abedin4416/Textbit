@@ -92,12 +92,18 @@ app.get("/session", async (req, res)=>{
     }
     const result = (await db.ref(`users/${username}`).once("value"));
     const data = result.val();
+    let klsit = {};
+    const knowns = Object.keys(data.knowns);
+    for(const k of knowns){
+      const kdata = (await db.ref(`users/${k}`).once("value")).val();
+      klsit[k] = {fullname:kdata.fullname,profile:kdata.profile};
+    }
     if(result.exists()) return res.json({
       status:200,
       username:username,
       fullname:data.fullname,
       profile:data.profile,
-      knowns:data.knowns || {}
+      knowns:klsit || {}
     });
   }catch(err){ error(res, 500, "Internal server error");}
 });
@@ -150,6 +156,23 @@ app.get("/firebase-token", async (req, res)=>{
     return error(res, 500, "Internal server error");
   }
 });
+
+app.post("/add-known", async (req, res)=>{
+  try{
+    const {username} = req.body;
+    const session = req.cookies?.session;
+    const sender = await getsession(session);
+    if(sender==0 || sender==1) return error(res, 401, "Unauthorized");
+    if(sender == username) return error(res, 400, "Cannot add yourself");
+    const result = await db.ref(`users/${username}`).once("value");
+    if(!result.exists()) return error(res, 404, "User not found");
+    await db.ref(`users/${sender}/knowns/${username}`).set(true);
+    return res.json({status:200});
+  }catch(err){
+    return error(res, 500, "Internal server error");
+  }
+});
+
 app.get("*", (req, res) => {
     res.sendFile(path.join(import.meta.dirname, "public", "index.html"));
 });

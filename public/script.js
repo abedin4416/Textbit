@@ -2,15 +2,7 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.0/firebase
 import { getAuth, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, onValue, off } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-window.user = {
-    username: "amir",
-    fullname: "Md Amir Abedin",
-    knowns:{
-        trump:{
-            fullname:"Donald Trump"
-        }
-    }
-}
+window.user = {}
 async function listendb(callback){
     const app = initializeApp({
         apiKey:"AIzaSyDcF3ZD2-jcwtl25fIgBHo8Jp7ACUuXUaQ",
@@ -68,7 +60,19 @@ function inboxitem(data){
     const io = document.createElement("div");
     io.classList.add(data.optionStyle || "inb-option");
     io.textContent = data.optionText;
-    io.onclick = data.optionCallback;
+    io.onclick = async ()=>{
+        if(data.optionStyle == "add-known"){
+            const result = await post("/add-known", {username:data.username});
+            if(result.status >= 400) return;
+            user.knowns[data.username] = {
+                fullname:data.fullname,
+                profile:data.profile
+            };
+            io.textContent = "Known";
+            io.classList.remove("add-known");
+            io.classList.add("inb-option");
+        }
+    }
     const content = document.createElement("div");
     content.className = "inbox-item";
     content.id = data.username;
@@ -134,7 +138,7 @@ search.onkeydown = async (e)=>{
             subtext:value,
             profile:data.profile,
             optionText:optionText,
-            optionStyle:optionStyle
+            optionStyle:optionStyle,
         }));
     }
 }
