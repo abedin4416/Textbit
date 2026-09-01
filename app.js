@@ -59,15 +59,6 @@ async function getsession(session){
   else return data.username;
 }
 
-app.get("/config", (req, res)=> {
-    res.json({
-        apiKey:process.env.PUBLIC_FIREBASE_API_KEY,
-        authDomain:process.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
-        databaseURL:process.env.PUBLIC_FIREBASE_DATABASE_URL,
-        projectID:process.env.PUBLIC_FIREBASE_PROJECT_ID
-    });
-});
-
 app.post("/search", async (req, res)=>{
   try{
     const {username} = req.body;
