@@ -11,6 +11,7 @@
         "cookie-parser": "^1.4.7",
         "dotenv": "^17.4.2",
         "express": "^4.19.2",
-        "firebase-admin": "^14.3.0"
+        "firebase-admin": "^10.3.0",
+        "uuid": "^14.0.2"
     }
 }
