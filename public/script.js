@@ -1,6 +1,6 @@
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, onValue, off } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { query, orderByChild, startAt, getDatabase, ref, onChildAdded, onChildChanged, off } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 window.user = {}
 async function listendb(callback){
@@ -13,9 +13,16 @@ async function listendb(callback){
     const data = await get("/firebase-token");
     if(!data.token) return;
     await signInWithCustomToken(auth, data.token);
-    const inbox = ref(db, `inbox-${user.username}`);
-    onValue(inbox, (snapshot)=>{
-        callback(snapshot.val());
+    const inbox = query(
+        ref(db, `inbox-${user.username}`),
+        orderByChild("date"),
+        startAt(Date.now())
+    );
+    onChildAdded(inbox, (snapshot)=>{
+        callback(snapshot.key, snapshot.val());
+    });
+    onChildChanged(inbox, (snapshot)=>{
+        callback(snapshot.key, snapshot.val());
     });
 }
 
@@ -35,6 +42,7 @@ const authmsg = $("auth-msg");
 const authswitch = $("auth-switch");
 const submit = $("submit");
 const inboxcont = $("inbox-content");
+const inboxwrapper = $("inbox-wrapper");
 const chatcont = $("chat-content");
 
 let lastColor = null;
@@ -110,7 +118,7 @@ function searchclear(x){
     if(!x) return;
     search.value = "";
     hide(searchclr, searchcont, searcherr);
-    show(searchload);
+    show(searchload, $("inbox-chats"));
 }
 
 searchclr.onclick = ()=>searchclear("reset");
@@ -142,13 +150,22 @@ search.onkeydown = async (e)=>{
         }));
     }
 }
-let isInitialLoad = true;
 function loadInbox(){
     authForm("hide");
-    show(inboxcont, chatcont);
+    show(inboxwrapper, inboxcont, chatcont);
     loadchat(user);
     profile($("inbox-icon"), user.profile);
     inboxtitle.textContent = user.fullname;
+    user.inbox && Object.keys(user.inbox).forEach((k)=>{
+        const msg = user.inbox[k];
+        $("inbox-chats").append(inboxitem({
+            username:k,
+            fullname:msg.fullname,
+            subtext:msg.content,
+            profile:msg.profile,
+            optionText:"FU"
+        }));
+    });
     inboxoption.onclick = ()=>{
         const hidden = $("settings").hidden;
         if(hidden){
@@ -161,19 +178,18 @@ function loadInbox(){
             hide($("settings"));
         }
     }
-    listendb((data)=>{
-        if(isInitialLoad){isInitialLoad = false;return;}
-        if(data){
-            const [[sender, msg]] = Object.entries(data);
-            $(sender)?.remove();
-            $("inbox-chats").prepend(inboxitem({
-                username:sender,
-                fullname:msg.fullname,
-                subtext:msg.content,
-                profile:msg.profile,
-                optionText:"FU"
-            }));
-        }
+    listendb((sender, data)=>{
+        if(!sender || !data) return;
+        $(`${sender}`)?.remove();
+
+        $("inbox-chats").prepend(inboxitem({
+            username:sender,
+            fullname:data.fullname,
+            subtext:data.content,
+            profile:data.profile,
+            optionText:"FU"
+        }));
+        
     });
 }
 

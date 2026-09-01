@@ -327,6 +327,7 @@ div{display:grid;}
 
 #settings{
     user-select: none;
+    font-size:13pt;
 }
 
 .set-items{
