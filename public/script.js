@@ -2,7 +2,7 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.0/firebase
 import { getAuth, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, onValue, off } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-let user = {
+window.user = {
     username: "amir",
     fullname: "Md Amir Abedin",
     knowns:{
@@ -11,7 +11,6 @@ let user = {
         }
     }
 }
-
 async function listendb(callback){
     const app = initializeApp({
         apiKey:"AIzaSyDcF3ZD2-jcwtl25fIgBHo8Jp7ACUuXUaQ",
@@ -96,16 +95,19 @@ async function send(receiver, content){
 }
 window.send = send;
 
-search.oninput = ()=> searchclr.hidden = search.value == "";
+search.oninput = ()=>{
+    searchclr.hidden = searchcont.lastElementChild == searcherr && search.value == "";
+}
 
-function searchclear(){
-    search.value = "";
+function searchclear(x){
     searchcont.lastElementChild !== searcherr && searchcont.lastElementChild.remove();
+    if(!x) return;
+    search.value = "";
     hide(searchclr, searchcont, searcherr);
     show(searchload);
 }
 
-searchclr.onclick = searchclear;
+searchclr.onclick = ()=>searchclear("reset");
 
 search.onkeydown = async (e)=>{
     if(e.key !== "Enter") return;
@@ -114,13 +116,15 @@ search.onkeydown = async (e)=>{
     hide($("inbox-chats"));
     const data = await post("/search", {username:value});
     if(data.status >= 400){
+        searchclear();
         hide(searchload); show(searcherr);
         searcherr.textContent = data.msg;
         return;
     }
     if(data.status == 200){
         hide(searchload, searcherr);
-        const optionText = value == user.username? "You" : value in user.knowns? "Known":"";
+        const optionText = value == user.username? "You" : (value in user.knowns)? "Known":"";
+        searchclear();
         searchcont.append(inboxitem({
             username:value,
             fullname:data.fullname,
@@ -140,7 +144,7 @@ function loadInbox(){
     inboxoption.onclick = ()=>{
         const hidden = $("settings").hidden;
         if(hidden){
-            searchclear();
+            searchclear("reset");
             hide($("search-box"), searchcont, $("inbox-chats"));
             show($("settings"));
         }

@@ -96,7 +96,8 @@ app.get("/session", async (req, res)=>{
       status:200,
       username:username,
       fullname:data.fullname,
-      profile:data.profile
+      profile:data.profile,
+      knowns:data.knowns || {}
     });
   }catch(err){ error(res, 500, "Internal server error");}
 });
