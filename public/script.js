@@ -126,13 +126,15 @@ search.onkeydown = async (e)=>{
     if(data.status == 200){
         hide(searchload, searcherr);
         const optionText = value == user.username? "You" : (value in user.knowns)? "Known":"";
+        const optionStyle = value in user.knowns || value == user.username? "":"add-known";
         searchclear();
         searchcont.append(inboxitem({
             username:value,
             fullname:data.fullname,
             subtext:value,
             profile:data.profile,
-            optionText:optionText
+            optionText:optionText,
+            optionStyle:optionStyle
         }));
     }
 }

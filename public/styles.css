@@ -308,6 +308,17 @@ div{display:grid;}
     font-weight:bold;
     justify-self: end;
 }
+.add-known{
+    background-image:url("res/add-known.png");
+    background-size:70%;
+    background-repeat:no-repeat;
+    width:2.2rem;
+    height:2.2rem;
+    grid-area:right;
+    align-self: center;
+    justify-self: end;
+    background-position:center;
+}
 #search-error{
     justify-self: center;
     margin-top:1rem;
