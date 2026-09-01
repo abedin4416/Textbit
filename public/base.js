@@ -1,6 +1,6 @@
 function $(a){return document.querySelector("#"+a)}
 function div(a,b,c){return `<div id='${a}' class='${b}'>${c}</div>`;}
-function style(id, cls){$(id).className = "";cls && $(id).classList.add(cls);}
+function style(a, cls){a.className = "";cls && a.classList.add(cls);}
 async function post(api, data) {
   try {
     const res = await fetch(api, {

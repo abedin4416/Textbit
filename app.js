@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import path from "path";
 import { initializeApp, getApps, cert } from "firebase-admin/app";
+import {getAuth} from "firebase-admin/auth";
 import { getDatabase } from "firebase-admin/database";
 import argon2 from "argon2";
 import crypto from "crypto";
@@ -38,19 +39,25 @@ async function insertdb(field, name, data, unique=1){
 }
 async function newsession(res, username){
   const session = crypto.randomUUID();
-  const expires = new Date(Date.now()+1*24*60*60*1000);
+  const expires = Date.now()+1*24*60*60*1000
   const data = await insertdb("sessions", session,{
-    username:username, expires:expires.toISOString()
+    username:username, expires:expires
   });
   res.cookie("session", session,{
     httpOnly:true,
     secure:process.env.NODE_ENV === "production",
     sameSite: "lax",
-    expires: expires
+    expires: new Date(expires)
   });
   return data.committed;
 }
-
+async function getsession(session){
+  const result = await db.ref(`sessions/${session}`).once("value");
+  if(!result.exists()) return 0;
+  const data = result.val();
+  if(data.expires < Date.now()) return 1;
+  else return data.username;
+}
 
 app.get("/config", (req, res)=> {
     res.json({
@@ -86,12 +93,14 @@ app.get("/session", async (req, res)=>{
   try{
     const session = req.cookies?.session;
     if(!session) return error(res, 401, "No session");
-    let result = await db.ref(`sessions/${session}`).once("value");
-    if(!result.exists()) return error(res, 401, "No session");
-    let data = result.val();
-    const username = data.username;
-    result = (await db.ref(`users/${username}`).once("value"));
-    data = result.val();
+    const username = await getsession(session);
+    if(username==0) return error(res, 401, "No session");
+    else if(username==1){
+      await db.ref(`sessions/${session}`).remove();
+      return error(res, 401, "No session");
+    }
+    const result = (await db.ref(`users/${username}`).once("value"));
+    const data = result.val();
     if(result.exists()) return res.json({
       status:200,
       username:username,
@@ -114,6 +123,41 @@ app.post("/signin", async (req, res)=>{
   }catch(err){error(res, 500, "Internal server error");}
 });
 
+app.post("/send", async (req, res)=>{
+  try{
+    const {receiver, content} = req.body;
+    const sender = await getsession(req.cookies?.session);
+    const rcvr = await db.ref(`users/${receiver}`).once("value");
+    if(sender==0 || sender==1 || !rcvr.exists()) return;
+    const sndr = await (await db.ref(`users/${sender}`).once("value")).val();
+    await db.ref("messages").push().set({
+      sender,
+      receiver,
+      content,
+      date:Date.now(),
+      seen:sender==receiver
+    });
+    await insertdb(`inbox-${receiver}`, sender, {
+      content,
+      fullname:sndr.fullname,
+      profile:sndr.profile,
+      date:Date.now(),
+      seen:sender==receiver
+    }, 0);
+  }catch(err){return error(res, 500, "Internal server error");}
+});
+
+app.get("/firebase-token", async (req, res)=>{
+  try{
+    const username = await getsession(req.cookies?.session);
+    const auth = getAuth();
+    if(username==0 || username==1) return error(res, 401, "Unauthorized");
+    const token = await auth.createCustomToken(username, {username});
+    return res.json({token});
+  }catch(err){
+    return error(res, 500, "Internal server error");
+  }
+});
 app.get("*", (req, res) => {
     res.sendFile(path.join(import.meta.dirname, "public", "index.html"));
 });

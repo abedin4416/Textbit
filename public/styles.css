@@ -18,7 +18,7 @@ body{
     padding-inline:0.5rem;
 }
 
-input, #search-box{
+input{
     width:20rem;
     height:2.5rem;
     margin-bottom:0.5rem;
@@ -93,30 +93,47 @@ div{display:grid;}
     cursor: pointer;
 }
 
+#inbox-wrapper{
+    grid-auto-flow: column;
+    grid-auto-columns:20rem 1fr;
+    column-gap:1rem;
+    height:100%;
+}
+
+#inbox-content{
+    align-content: start;
+}
+.inbox-content{
+    width:20rem;
+}
+
 #inbox-label{
     grid-auto-flow: column;
     align-items:center;
     font-size:13pt;
     grid-template-columns: 2.5rem 1fr 1fr;
     column-gap: 0.5rem;
-    width:20rem;
     font-weight:600;
     padding-bottom:0.5rem;
+    width:100%;
 }
 
 #inbox-icon{
-    background-size:70%;
-    background-repeat: no-repeat;
-    background-position: center;
     width:2.5rem;
     height:2.5rem;
     border-radius:50%;
 }
+.default-profile{
+    background-image:url("res/person.svg");
+    background-size:70%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 #inbox-option{
-    width:2rem;
-    height:2rem;
+    width:2.2rem;
+    height:2.2rem;
     background-image:url("res/settings.png");
-    background-size:80%;
+    background-size:70%;
     background-repeat:no-repeat;
     background-position:center;
     justify-self: end;
@@ -132,6 +149,7 @@ div{display:grid;}
     margin:0;
     width:auto;
     background-color:var(--ash);
+    border-radius:0.5rem;
 }
 #search-clear{
     width:2rem;
@@ -149,19 +167,74 @@ div{display:grid;}
     grid-template-columns: 1fr 2rem;
     background:var(--ash);
     border:none;
+    border-radius:0.5rem;
 }
 
-#search-content{
+.inbox-cont{
     width:20rem;
 }
 
+#chat-content{
+    align-content:start;
+}
+
+#chat-label{
+    grid-auto-flow: column;
+    align-items:center;
+    font-size:13pt;
+    grid-template-columns: 2.5rem 1fr 1fr;
+    column-gap: 0.5rem;
+    font-weight:600;
+    padding-bottom:0.5rem;
+    width:100%;
+}
+#chat-icon{
+    width:2.5rem;
+    height:2.5rem;
+    border-radius:50%;
+}
+#chat-close{
+    width:2.2rem;
+    height:2.2rem;
+    background-image:url("res/close.png");
+    background-size:80%;
+    background-repeat:no-repeat;
+    background-position:center;
+    justify-self: end;
+}
+#chat-option{
+    width:2.2rem;
+    height:2.2rem;
+    background-image:url("res/more.png");
+    background-size:60%;
+    background-repeat:no-repeat;
+    background-position:center;
+    justify-self: end;
+}
+.option{
+    border-radius:3rem;
+}
+.option:hover{
+    background-color:var(--ash);
+}
+
 @media (max-width:45rem){
-    #inbox-label{
+    .content-full{
         width:100%;
     }
-    #search-box, #search-content{
+    .content-half{
+        display:none;
+    }
+    .inbox-cont{
         justify-self: center;
         width:min(25rem, 100%);
+    }
+    .chat-cont{
+        justify-self: center;
+        width:100%;
+    }
+    #inbox-wrapper{
+        grid-template-columns: auto;
     }
 }
 
@@ -195,7 +268,7 @@ div{display:grid;}
     }
 }
 
-#search-result{
+.inbox-item{
     grid-template-areas:
         "left top top right"
         "left bottom bottom right";
@@ -208,30 +281,27 @@ div{display:grid;}
     box-sizing: border-box;
     user-select: none;
 }
-#search-result:hover{
+.inbox-item:hover{
     background:var(--ash);
 }
-#sr-icon{
+.inb-icon{
     grid-area:left;
-    border-radius:5rem;
     width:2.5rem;
     height:2.5rem;
     justify-items: center;
     align-content:center;
     row-gap:0.1rem;
-    background-size:70%;
-    background-repeat:no-repeat;
-    background-position:center;
+    border-radius:3rem;
 }
 
-#sr-fullname{
+.inb-name{
     grid-area:top;
 }
-#sr-username{
+.inb-subtext{
     grid-area:bottom;
     color:grey;
 }
-#sr-option{
+.inb-option{
     grid-area:right;
     align-self: center;
     font-size:11pt;
@@ -242,4 +312,26 @@ div{display:grid;}
     justify-self: center;
     margin-top:1rem;
     font-size:13pt;
+}
+
+#settings{
+    user-select: none;
+}
+
+.set-items{
+    border-radius:0.5rem;
+}
+.set-items:hover{
+    background-color:var(--ash);
+}
+
+#sign-out{
+    align-items: center;
+    margin-top:1rem;
+    padding:0.5rem;
+    background-image:url("res/logout.png");
+    background-repeat: no-repeat;
+    background-size:8%;
+    padding-left: 3rem;
+    background-position: left 0.5rem center;
 }

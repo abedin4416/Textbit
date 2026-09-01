@@ -2,7 +2,7 @@
     <head>
         <title>Textbit</title>
         <meta name="theme-color" content="white">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <link rel="stylesheet" href="styles.css"/>
         <link rel="icon" href="res/iconx.png"/>
     </head>
@@ -24,33 +24,40 @@
             </form>
             <div id="auth-alt">or&nbsp<div id="auth-switch">create an account</div></div>
         </div>
-        <div id="inbox-content" hidden>
-            <div id="inbox-label">
+        <div id="inbox-wrapper">
+        <div id="inbox-content" class="content-full" hidden>
+            <div id="inbox-label" class="inbox-label">
                 <div id="inbox-icon"></div>
                 <div id="inbox-title"></div>
-                <div id="inbox-option"></div>
+                <div id="inbox-option" class="option"></div>
             </div>
-            <div id="search-box">
+            <div id="search-box" class="inbox-cont">
                 <input id="search" placeholder="Search for people" spellcheck="false"/>
                 <div id="search-clear" hidden></div>
             </div>
-            <div id="search-content" hidden>
+            <div id="search-content" class="inbox-cont" hidden>
                 <div id="search-loading">
                     <div class="dot"></div><div class="dot"></div>
                     <div class="dot"></div><div class="dot"></div>
                     <div class="dot"></div>
                 </div>
-                <div id="search-result" hidden>
-                    <div id="sr-icon"></div>
-                    <div id="sr-fullname"></div>
-                    <div id="sr-username"></div>
-                    <div id="sr-option"></div>
-                </div>
                 <div id="search-error" hidden></div>
             </div>
+            <div id="inbox-chats"></div>
+            <div id="settings" hidden>
+                <div id="sign-out" class="set-items">Sign out</div>
+            </div>
         </div>
-        <div id="chat-content"></div>
+        <div id="chat-content" class="content-half" hidden>
+            <div id="chat-label">
+                <div id="chat-icon"></div>
+                <div id="chat-title">Md Amir Abedin</div>
+                <div id="chat-close" class="option"></div>
+                <div id="chat-option" class="option"></div>
+            </div>
+        </div>
+        </div>
         <script src="base.js"></script>
-        <script src="script.js"></script>
+        <script type="module" src="script.js"></script>
     </body>
 </html>
