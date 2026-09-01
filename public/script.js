@@ -96,7 +96,9 @@ async function send(receiver, content){
 window.send = send;
 
 search.oninput = ()=>{
-    searchclr.hidden = searchcont.lastElementChild == searcherr && search.value == "";
+    searchclr.hidden = 
+        searchcont.lastElementChild == searcherr
+        && searcherr.hidden == true && search.value == "";
 }
 
 function searchclear(x){
