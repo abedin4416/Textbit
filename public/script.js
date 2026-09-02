@@ -146,10 +146,7 @@ function inboxitem(data){
             content.style.backgroundColor = "var(--ash)";
             const chats = await post("/chats", {partner:data.username});
             if(chats.status >= 400) return;
-            $("chat-messages").innerHTML = "";
-            for (const value of Object.values(chats.chats)) {
-                $("chat-messages").append(chatitem(value));
-            }
+            loadchat(chats);
         }
     }
     return content;
@@ -192,17 +189,25 @@ $("send").onclick = async () => {
 
 function chatitem(data){
     const content = document.createElement("div");
-    content.className = "chat";
-    const senderType = data.sender == user.username? "user-text":"other-text";
     const align = data.sender == user.username? "end":"start";
+    content.className = "chat-"+align;
+    const senderType = data.sender == user.username? "user-text":"other-text";
     content.style["justify-self"] = align;
     const text = div("", senderType, data.content);
-    content.innerHTML = text;
+    const rcpt = data.seen? "seen":"sent";
+    const btmtext = div("", "chat-sub", data.sender+" &nbsp;"+chattime(data.date));
+    const receipt = div("", "receipt", rcpt);
+    content.innerHTML = text+btmtext;
     return content;
 }
 
-function loadchat(partner){
-    profile($("chat-icon"), partner.profile);
+function loadchat(chats){
+    const cm = $("chat-messages");
+    cm.innerHTML = "";
+    for (const value of Object.values(chats.chats)) {
+        cm.append(chatitem(value));
+    }
+    cm.scrollTop = cm.scrollHeight;
 }
 
 search.oninput = ()=>{
@@ -249,10 +254,10 @@ search.onkeydown = async (e)=>{
         }));
     }
 }
+let chatAdded = false;
 function loadInbox(){
     authForm("hide");
     show(inboxwrapper, inboxcont, chatcont);
-    loadchat(user);
     profile($("inbox-icon"), user.profile);
     inboxtitle.textContent = user.fullname;
     user.inbox && Object.keys(user.inbox).forEach((k)=>{
@@ -294,9 +299,15 @@ function loadInbox(){
         });
         if(chdata && chdata == partner){
             inbitem.style.backgroundColor = "var(--ash)";
+            const cm = $("chat-messages")
+            !chatAdded && cm.append(chatitem(data))
+            chatAdded = chatAdded? false:true;
+            const isAtBottom = cm.scrollHeight - cm.clientHeight <= cm.scrollTop + 100;
+            if(isAtBottom){
+                cm.scrollTo({top: cm.scrollHeight,behavior: 'smooth'});
+            }
         }
         $("inbox-chats").prepend(inbitem);
-
         
     });
 }

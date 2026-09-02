@@ -17,6 +17,7 @@ body{
     font-family: "gsansflex";
     color:var(--black);
     padding-inline:0.5rem;
+    overflow: hidden;
 }
 
 input{
@@ -179,6 +180,7 @@ div{display:grid;}
 #chat-content{
     align-content:start;
     grid-template-rows: 1fr;
+    min-height:0;
 }
 
 #chat-label{
@@ -397,26 +399,55 @@ div{display:grid;}
 
 #chat-box{
     margin-top:0.5rem;
-    grid-template-rows: 1fr 2.5rem;
-    height:100%;
+    grid-template-rows: minmax(0, 1fr) 2.5rem;
     justify-content: center;
     grid-template-columns: 1fr;
+    min-height:0;
 }
 #chat-messages{
     overflow-y: auto;
     align-content: start;
     padding:0.5rem;
+    width:min(43rem, 100%);
+    justify-self: center;
+    min-height:0;
+    margin-bottom:2rem;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
-#chat{
-
+.chat-start{
+    margin-bottom:0.5rem;
+    font-size:14pt;
+    justify-items: start;
+    grid-template-rows: 1fr 0.5rem;
 }
-#user-text{
+.chat-end{
+    margin-bottom:0.5rem;
+    font-size:14pt;
+    justify-items: end;
+}
+.user-text{
     background:var(--ash);
-    border-radius:1rem;
+    border-radius:1.5rem;
     justify-self: end;
+    padding:1rem;
+    padding-inline:1.5rem;
 }
-#other-text{
+.other-text{
     justify-self: start;
+}
+.receipt{
+    justify-self: end;
+    color:grey;
+    font-size:11pt;
+}
+.chat-sub{
+    font-size:10pt;
+    color:grey;
+    
 }
 
 #chat-input{
