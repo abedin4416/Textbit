@@ -165,6 +165,11 @@ $("send").onclick = async () => {
     if(res.status >= 400) return;
 }
 
+function chatitem(data){
+    const content = document.createElement("div");
+    
+}
+
 function loadchat(partner){
     profile($("chat-icon"), partner.profile);
 }
