@@ -141,6 +141,15 @@ $("chat-close").onclick = () => {
   });
 };
 
+$("send").onclick = async () => {
+    const partner = chatcont.dataset.partner;
+    const content = $("message").value.trim();
+    $("message").value = "";
+    if(!partner || !content) return;
+    const res = await send(partner, content);
+    if(res.status >= 400) return;
+}
+
 function loadchat(partner){
     profile($("chat-icon"), partner.profile);
 }
@@ -226,15 +235,21 @@ function loadInbox(){
     }
     listendb((sender, data)=>{
         if(!sender || !data) return;
+        const partner = chatcont.dataset.partner;
         $(`${sender}`)?.remove();
 
-        $("inbox-chats").prepend(inboxitem({
+        const inbitem = inboxitem({
             username:sender,
             fullname:data.fullname,
             subtext:data.content,
             profile:data.profile,
             optionText:chattime(data.date)
-        }));
+        });
+        if(partner && partner == sender){
+            inbitem.style.backgroundColor = "var(--ash)";
+        }
+        $("inbox-chats").prepend(inbitem);
+
         
     });
 }

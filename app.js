@@ -162,6 +162,14 @@ app.post("/send", async (req, res)=>{
       date:Date.now(),
       seen:sender==receiver
     }, 0);
+    await insertdb(`inbox-${sender}`, receiver, {
+      fullname:rcvr.fullname,
+      profile:rcvr.profile,
+      content,
+      date:Date.now(),
+      seen:sender==receiver
+    }, 0);
+    return res.json({status:200});
   }catch(err){return error(res, 500, "Internal server error");}
 });
 

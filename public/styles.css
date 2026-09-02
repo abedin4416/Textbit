@@ -1,5 +1,6 @@
 :root{
     --ash: rgb(235,240,250);
+    --d-ash: rgb(200,200,220);
     --black:rgb(50,50,60);
     --l-black:rgb(70,70,90);
     --blue:rgb(35, 91, 204);
@@ -195,10 +196,6 @@ div{display:grid;}
     width:2.5rem;
     height:2.5rem;
     border-radius:50%;
-    visibility:hidden;
-}
-#chat-title{
-    visibility:hidden;
 }
 #chat-close{
     width:2.2rem;
@@ -242,9 +239,6 @@ div{display:grid;}
     }
     #inbox-wrapper{
         grid-template-columns: auto;
-    }
-    #chat-icon, #chat-title{
-        visibility:visible;
     }
 }
 
@@ -407,12 +401,14 @@ div{display:grid;}
     background-color:transparent;
 }
 #send{
-    width:2.5rem;
-    height:2.5rem;
+    width:2.4rem;
+    height:2.4rem;
     background-image:url("res/send.png");
-    background-size:70%;
+    background-size:60%;
     background-repeat:no-repeat;
     background-position:center;
-    background-color:var(--blue);
     border-radius:0.5rem;
+}
+#send:hover{
+    background-color:var(--d-ash);
 }
