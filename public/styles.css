@@ -304,6 +304,8 @@ div{display:grid;}
 .inb-subtext{
     grid-area:bottom;
     color:grey;
+    grid-auto-flow: column;
+    justify-content: start;
 }
 .inb-option{
     grid-area:right;
@@ -411,4 +413,7 @@ div{display:grid;}
 }
 #send:hover{
     background-color:var(--d-ash);
+}
+#sbtext{
+    color:var(--black);
 }

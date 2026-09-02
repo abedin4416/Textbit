@@ -147,6 +147,7 @@ app.post("/send", async (req, res)=>{
     const sender = await getsession(req.cookies?.session);
     const rcvr = await db.ref(`users/${receiver}`).once("value");
     if(sender==0 || sender==1 || !rcvr.exists()) return;
+    const rcvrdata = rcvr.val();
     const sndr = await (await db.ref(`users/${sender}`).once("value")).val();
     await db.ref("messages").push().set({
       sender,
@@ -160,14 +161,17 @@ app.post("/send", async (req, res)=>{
       profile:sndr.profile,
       content,
       date:Date.now(),
-      seen:sender==receiver
+      seen:sender==receiver,
+      sender:sender
     }, 0);
+
     await insertdb(`inbox-${sender}`, receiver, {
-      fullname:rcvr.fullname,
-      profile:rcvr.profile,
+      fullname:rcvrdata.fullname,
+      profile:rcvrdata.profile,
       content,
       date:Date.now(),
-      seen:sender==receiver
+      seen:sender==receiver,
+      sender:sender
     }, 0);
     return res.json({status:200});
   }catch(err){return error(res, 500, "Internal server error");}

@@ -74,7 +74,9 @@ function chattime(a) {
 function inboxitem(data){
     const icon = document.createElement("div");
     const fn = div("", "inb-name", data.fullname);
-    const st = div("", "inb-subtext", data.subtext);
+    const sbtext = user.username == data.sender? `<text id="sbtext">You:&nbsp;</text>`+data.content:data.content;
+    const stext = data.subtext || sbtext;
+    const st = div("", "inb-subtext", stext);
     const io = document.createElement("div");
     io.classList.add(data.optionStyle || "inb-option");
     io.textContent = data.optionText;
@@ -141,6 +143,19 @@ $("chat-close").onclick = () => {
   });
 };
 
+async function send(receiver, content){
+    try{
+        const data = await post("/send",{
+            receiver: receiver,
+            content: content
+        });
+        return {status:data.status};
+    } catch (err) {
+        return {status:data.status};
+    }
+}
+window.send = send;
+
 $("send").onclick = async () => {
     const partner = chatcont.dataset.partner;
     const content = $("message").value.trim();
@@ -153,14 +168,6 @@ $("send").onclick = async () => {
 function loadchat(partner){
     profile($("chat-icon"), partner.profile);
 }
-
-async function send(receiver, content){
-    const data = await post("/send",{
-        receiver: receiver,
-        content: content
-    });
-}
-window.send = send;
 
 search.oninput = ()=>{
     searchclr.hidden = 
@@ -216,7 +223,8 @@ function loadInbox(){
         $("inbox-chats").append(inboxitem({
             username:k,
             fullname:msg.fullname,
-            subtext:msg.content,
+            sender:msg.sender,
+            content:msg.content,
             profile:msg.profile,
             optionText:chattime(msg.date)
         }));
@@ -233,19 +241,19 @@ function loadInbox(){
             hide($("settings"));
         }
     }
-    listendb((sender, data)=>{
-        if(!sender || !data) return;
-        const partner = chatcont.dataset.partner;
-        $(`${sender}`)?.remove();
+    listendb((partner, data)=>{
+        if(!partner || !data) return;
+        const chdata = chatcont.dataset.partner;
+        $(`${partner}`)?.remove();
 
         const inbitem = inboxitem({
-            username:sender,
+            username:partner,
             fullname:data.fullname,
-            subtext:data.content,
+            sender:data.sender,
             profile:data.profile,
             optionText:chattime(data.date)
         });
-        if(partner && partner == sender){
+        if(chdata && chdata == partner){
             inbitem.style.backgroundColor = "var(--ash)";
         }
         $("inbox-chats").prepend(inbitem);
