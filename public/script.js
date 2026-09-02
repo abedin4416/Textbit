@@ -15,7 +15,7 @@ async function listendb(callback){
     if(!data.token) return;
     await signInWithCustomToken(auth, data.token);
     const inbox = query(
-        ref(db, `inbox-${user.username}`),
+        ref(db, `inboxes/inbox-${user.username}`),
         orderByChild("date"),
         startAt(Date.now())
     );
@@ -111,14 +111,16 @@ function inboxitem(data){
             io.classList.remove("inb-option-x");
         }
     }
-    content.id = data.username;
+    content.dataset.type = data.type || "";
+    const type = content.dataset.type;
+    content.id = type===""? data.username:data.username+"-"+type;
     content.append(icon);
     profile(icon, data.profile);
     icon.classList.add("inb-icon");
     content.innerHTML+= fn+st;
     content.append(io);
     content.append(io2);
-    content.onclick = ()=>{
+    content.onclick = async ()=>{
         const partner = chatcont.dataset.partner;
         if(partner && partner == data.username){
             style(inboxcont, "content-full");
@@ -142,6 +144,12 @@ function inboxitem(data){
                 item.style.backgroundColor = "";
             });
             content.style.backgroundColor = "var(--ash)";
+            const chats = await post("/chats", {partner:data.username});
+            if(chats.status >= 400) return;
+            $("chat-messages").innerHTML = "";
+            for (const value of Object.values(chats.chats)) {
+                $("chat-messages").append(chatitem(value));
+            }
         }
     }
     return content;
@@ -184,7 +192,13 @@ $("send").onclick = async () => {
 
 function chatitem(data){
     const content = document.createElement("div");
-
+    content.className = "chat";
+    const senderType = data.sender == user.username? "user-text":"other-text";
+    const align = data.sender == user.username? "end":"start";
+    content.style["justify-self"] = align;
+    const text = div("", senderType, data.content);
+    content.innerHTML = text;
+    return content;
 }
 
 function loadchat(partner){
@@ -228,6 +242,7 @@ search.onkeydown = async (e)=>{
             username:value,
             fullname:data.fullname,
             subtext:value,
+            type:"search",
             profile:data.profile,
             optionText:optionText,
             optionStyle:optionStyle,
@@ -268,7 +283,6 @@ function loadInbox(){
         if(!partner || !data) return;
         const chdata = chatcont.dataset.partner;
         $(`${partner}`)?.remove();
-
         const inbitem = inboxitem({
             username:partner,
             fullname:data.fullname,

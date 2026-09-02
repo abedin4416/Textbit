@@ -90,28 +90,32 @@ app.get("/session", async (req, res)=>{
       await db.ref(`sessions/${session}`).remove();
       return error(res, 401, "No session");
     }
-    const result = (await db.ref(`users/${username}`).once("value"));
-    const data = result.val();
-    let klist = {};
-    if (!data.knowns || typeof data.knowns !== "object") data.knowns = {};
-    const knowns = Object.keys(data.knowns);
-    for(const k of knowns){
-      const kdata = (await db.ref(`users/${k}`).once("value")).val();
-      klist[k] = {fullname:kdata.fullname,profile:kdata.profile};
-    }
-
-    let inboxdata = (await db.ref(`inbox-${username}`).once("value")).val();
-    if (!inboxdata || typeof inboxdata !== "object") inboxdata = {};
-    for(const k of Object.keys(inboxdata)){
-      const kdata = (await db.ref(`users/${k}`).once("value")).val();
-      inboxdata[k].fullname = kdata.fullname;
-      inboxdata[k].profile = kdata.profile;
-    }
-
-    const sortedKeys = Object.keys(inboxdata).sort((a, b) => {
-        return (inboxdata[b].date || 0) - (inboxdata[a].date || 0);
+    const result = await db.ref(`users/${username}`).once("value");
+    const data = result.val() || {};
+    const knownsData = (data.knowns && typeof data.knowns === "object") ? data.knowns : {};
+    const knowns = Object.keys(knownsData);
+    const kpromises = knowns.map(k => db.ref(`users/${k}`).once("value"));
+    const kSnapshots = await Promise.all(kpromises);
+    const klist = {};
+    knowns.forEach((k, index) => {
+      const kdata = kSnapshots[index].val() || {};
+      klist[k] = {fullname: kdata.fullname,profile: kdata.profile};
     });
 
+    const inboxSnap = await db.ref(`inboxes/inbox-${username}`).once("value");
+    let inboxdata = inboxSnap.val();
+    if (!inboxdata || typeof inboxdata !== "object") inboxdata = {};
+    const partnerKeys = Object.keys(inboxdata);
+    const userPromises = partnerKeys.map(k => db.ref(`users/${k}`).once("value"));
+    const userSnapshots = await Promise.all(userPromises);
+    partnerKeys.forEach((k, index) => {
+      const kdata = userSnapshots[index].val() || {};
+      inboxdata[k].fullname = kdata.fullname || k;
+      inboxdata[k].profile = kdata.profile || "";
+    });
+    const sortedKeys = partnerKeys.sort((a, b) => {
+      return (inboxdata[b].date || 0) - (inboxdata[a].date || 0);
+    });
     const sortedInboxData = {};
     for (const k of sortedKeys) {
       sortedInboxData[k] = inboxdata[k];
@@ -149,14 +153,15 @@ app.post("/send", async (req, res)=>{
     if(sender==0 || sender==1 || !rcvr.exists()) return;
     const rcvrdata = rcvr.val();
     const sndr = await (await db.ref(`users/${sender}`).once("value")).val();
-    await db.ref("messages").push().set({
+    const chatName = [sender, receiver].sort().join("-");
+    await db.ref(`chats/${chatName}`).push().set({
       sender,
       receiver,
       content,
       date:Date.now(),
       seen:sender==receiver
     });
-    await insertdb(`inbox-${receiver}`, sender, {
+    await insertdb(`inboxes/inbox-${receiver}`, sender, {
       fullname:sndr.fullname,
       profile:sndr.profile,
       content,
@@ -165,7 +170,7 @@ app.post("/send", async (req, res)=>{
       sender:sender
     }, 0);
 
-    await insertdb(`inbox-${sender}`, receiver, {
+    await insertdb(`inboxes/inbox-${sender}`, receiver, {
       fullname:rcvrdata.fullname,
       profile:rcvrdata.profile,
       content,
@@ -203,6 +208,22 @@ app.post("/add-known", async (req, res)=>{
   }catch(err){
     return error(res, 500, "Internal server error");
   }
+});
+
+app.post("/chats", async (req, res)=>{
+  try{
+    const {partner} = req.body;
+    const username = await getsession(req.cookies?.session);
+    if(username == 0 || username == 1) return;
+    const chatName = [username, partner].sort().join("-");
+    const snapshot = await db.ref(`chats/${chatName}`).orderByChild("date").once("value");
+    if (!snapshot.exists()) return;
+    const sortedData = {};
+    snapshot.forEach((childSnap) => {
+      sortedData[childSnap.key] = childSnap.val();
+    });
+    return res.json({status:200, chats:sortedData});
+  }catch(err){return error(res, 500, "Internal server error");}
 });
 
 app.get("*", (req, res) => {

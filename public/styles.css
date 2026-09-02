@@ -284,6 +284,9 @@ div{display:grid;}
     width:100%;
     box-sizing: border-box;
     user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .inbox-item-x{
     grid-template-areas:
@@ -297,6 +300,9 @@ div{display:grid;}
     width:100%;
     box-sizing: border-box;
     user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .inbox-item:hover{
     background:var(--ash);
@@ -398,8 +404,21 @@ div{display:grid;}
 }
 #chat-messages{
     overflow-y: auto;
+    align-content: start;
     padding:0.5rem;
 }
+#chat{
+
+}
+#user-text{
+    background:var(--ash);
+    border-radius:1rem;
+    justify-self: end;
+}
+#other-text{
+    justify-self: start;
+}
+
 #chat-input{
     grid-auto-flow: column;
     align-items: center;
