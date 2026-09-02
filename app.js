@@ -92,12 +92,12 @@ app.get("/session", async (req, res)=>{
     }
     const result = (await db.ref(`users/${username}`).once("value"));
     const data = result.val();
-    let klsit = {};
+    let klist = {};
     if (!data.knowns || typeof data.knowns !== "object") data.knowns = {};
     const knowns = Object.keys(data.knowns);
     for(const k of knowns){
       const kdata = (await db.ref(`users/${k}`).once("value")).val();
-      klsit[k] = {fullname:kdata.fullname,profile:kdata.profile};
+      klist[k] = {fullname:kdata.fullname,profile:kdata.profile};
     }
 
     let inboxdata = (await db.ref(`inbox-${username}`).once("value")).val();
@@ -122,7 +122,7 @@ app.get("/session", async (req, res)=>{
       username:username,
       fullname:data.fullname,
       profile:data.profile,
-      knowns:klsit || {},
+      knowns:klist || {},
       inbox:sortedInboxData || {}
     });
   }catch(err){ error(res, 500, "Internal server error");}

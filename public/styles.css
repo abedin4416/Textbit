@@ -116,6 +116,7 @@ div{display:grid;}
     font-weight:600;
     padding-bottom:0.5rem;
     width:100%;
+    user-select: none;
 }
 
 #inbox-icon{
@@ -176,6 +177,7 @@ div{display:grid;}
 
 #chat-content{
     align-content:start;
+    grid-template-rows: 1fr;
 }
 
 #chat-label{
@@ -187,11 +189,16 @@ div{display:grid;}
     font-weight:600;
     padding-bottom:0.5rem;
     width:100%;
+    user-select: none;
 }
 #chat-icon{
     width:2.5rem;
     height:2.5rem;
     border-radius:50%;
+    visibility:hidden;
+}
+#chat-title{
+    visibility:hidden;
 }
 #chat-close{
     width:2.2rem;
@@ -235,6 +242,9 @@ div{display:grid;}
     }
     #inbox-wrapper{
         grid-template-columns: auto;
+    }
+    #chat-icon, #chat-title{
+        visibility:visible;
     }
 }
 
@@ -346,4 +356,63 @@ div{display:grid;}
     background-size:8%;
     padding-left: 3rem;
     background-position: left 0.5rem center;
+}
+
+#no-chat{
+    justify-content: center;
+    margin-top:-5rem;
+    align-items: center;
+    text-align: center;
+    align-content: center;
+}
+#no-chat-text{
+    font-size:19pt;
+}
+#no-chat-subtext{
+    font-size:16pt;
+    color:grey;
+}
+
+#chat-box{
+    margin-top:0.5rem;
+    grid-template-rows: 1fr 2.5rem;
+    height:100%;
+    justify-content: center;
+    grid-template-columns: 1fr;
+}
+#chat-messages{
+    overflow-y: auto;
+    padding:0.5rem;
+}
+#chat-input{
+    grid-auto-flow: column;
+    align-items: center;
+    column-gap:0.5rem;
+    align-self: end;
+    grid-template-columns: 1fr 2.5rem;
+    margin-bottom: 1rem;
+    width:min(32rem, 100%);
+    justify-self: center;
+    background-color:var(--ash);
+    border-radius:0.5rem;
+    padding-inline:0.25rem;
+}
+#message{
+    width:100%;
+    height:3rem;
+    font-size: 12pt;
+    padding:0 0.5rem 0 0.5rem;
+    margin:0;
+    border:none;
+    background-color:transparent;
+}
+#send{
+    width:2.5rem;
+    height:2.5rem;
+    background-image:url("res/send.png");
+    background-size:70%;
+    background-repeat:no-repeat;
+    background-position:center;
+    background-color:var(--blue);
+    border-radius:0.5rem;
 }

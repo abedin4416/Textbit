@@ -61,6 +61,16 @@ function profile(a, b){
         a.style.backgroundImage = `url('${b}')`;
     }
 }
+function chattime(a) {
+  if (!a || isNaN(a)) return "";
+  const diffMs = Date.now() - a;
+  if (diffMs < 60000) return "Now";
+  if (diffMs < 3600000) return `${Math.floor(diffMs / 60000)}m`;
+  if (diffMs < 86400000) return `${Math.floor(diffMs / 3600000)}h`;
+  if (diffMs < 604800000) return `${Math.floor(diffMs / 86400000)}d`;
+  if (diffMs < 31557600000) return `${Math.floor(diffMs / 604800000)}w`;
+  return `${Math.floor(diffMs / 31557600000)}y`;
+}
 function inboxitem(data){
     const icon = document.createElement("div");
     const fn = div("", "inb-name", data.fullname);
@@ -90,10 +100,46 @@ function inboxitem(data){
     content.innerHTML+= fn+st;
     content.append(io);
     content.onclick = ()=>{
-
+        const partner = chatcont.dataset.partner;
+        if(partner && partner == data.username){
+            style(inboxcont, "content-full");
+            style(chatcont, "content-half");
+            hide($("chat-label"), $("chat-box"));
+            show($("no-chat"));
+            chatcont.style["grid-template-rows"] = "1fr";
+            chatcont.dataset.partner = "";
+            $("chat-title").textContent = "";
+            content.style.backgroundColor = "";
+        }else{
+            style(inboxcont, "content-half");
+            style(chatcont, "content-full");
+            chatcont.dataset.partner = data.username;
+            $("chat-title").textContent = data.fullname;
+            hide($("no-chat"));
+            show($("chat-label"), $("chat-box"));
+            profile($("chat-icon"), data.profile);
+            chatcont.style["grid-template-rows"] = "2.5rem 1fr";
+            document.querySelectorAll(".inbox-item").forEach((item) => {
+                item.style.backgroundColor = "";
+            });
+            content.style.backgroundColor = "var(--ash)";
+        }
     }
     return content;
 }
+
+$("chat-close").onclick = () => {
+  style(inboxcont, "content-full");
+  style(chatcont, "content-half");
+  hide($("chat-label"), $("chat-box"));
+  show($("no-chat"));
+  chatcont.style["grid-template-rows"] = "1fr";
+  chatcont.dataset.partner = "";
+  $("chat-title").textContent = "";
+  document.querySelectorAll(".inbox-item").forEach((item) => {
+    item.style.backgroundColor = "";
+  });
+};
 
 function loadchat(partner){
     profile($("chat-icon"), partner.profile);
@@ -163,7 +209,7 @@ function loadInbox(){
             fullname:msg.fullname,
             subtext:msg.content,
             profile:msg.profile,
-            optionText:"FU"
+            optionText:chattime(msg.date)
         }));
     });
     inboxoption.onclick = ()=>{
@@ -187,7 +233,7 @@ function loadInbox(){
             fullname:data.fullname,
             subtext:data.content,
             profile:data.profile,
-            optionText:"FU"
+            optionText:chattime(data.date)
         }));
         
     });
