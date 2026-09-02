@@ -419,13 +419,13 @@ div{display:grid;}
     -ms-overflow-style: none;
 }
 .chat-start{
-    margin-bottom:0.5rem;
+    margin-block:0.5rem;
     font-size:14pt;
     justify-items: start;
     grid-template-rows: 1fr 0.5rem;
 }
 .chat-end{
-    margin-bottom:0.5rem;
+    margin-block:0.5rem;
     font-size:14pt;
     justify-items: end;
 }
