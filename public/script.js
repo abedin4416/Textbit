@@ -251,6 +251,7 @@ function loadInbox(){
             fullname:data.fullname,
             sender:data.sender,
             profile:data.profile,
+            content:data.content,
             optionText:chattime(data.date)
         });
         if(chdata && chdata == partner){
