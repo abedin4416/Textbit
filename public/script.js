@@ -2,6 +2,7 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.0/firebase
 import { getAuth, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { query, orderByChild, startAt, getDatabase, ref, onChildAdded, onChildChanged, off } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
+const isMobile = window.matchMedia("(pointer: coarse), (max-width: 768px)").matches;
 window.user = {}
 async function listendb(callback){
     const app = initializeApp({
@@ -78,6 +79,7 @@ function inboxitem(data){
     const stext = data.subtext || sbtext;
     const st = div("", "inb-subtext", stext);
     const io = document.createElement("div");
+    const io2 = document.createElement("div");
     io.classList.add(data.optionStyle || "inb-option");
     io.textContent = data.optionText;
     io.onclick = async ()=>{
@@ -95,12 +97,27 @@ function inboxitem(data){
     }
     const content = document.createElement("div");
     content.className = "inbox-item";
+    if(data.option2Style && !isMobile){
+        io2.classList.add(data.option2Style);
+        io2.hidden = true;
+        content.onmouseenter = ()=>{
+            show(io2);
+            content.className = "inbox-item-x";
+            io.classList.add("inb-option-x");
+        }
+        content.onmouseleave = ()=>{
+            hide(io2);
+            content.className = "inbox-item";
+            io.classList.remove("inb-option-x");
+        }
+    }
     content.id = data.username;
     content.append(icon);
     profile(icon, data.profile);
     icon.classList.add("inb-icon");
     content.innerHTML+= fn+st;
     content.append(io);
+    content.append(io2);
     content.onclick = ()=>{
         const partner = chatcont.dataset.partner;
         if(partner && partner == data.username){
@@ -167,7 +184,7 @@ $("send").onclick = async () => {
 
 function chatitem(data){
     const content = document.createElement("div");
-    
+
 }
 
 function loadchat(partner){
@@ -231,7 +248,8 @@ function loadInbox(){
             sender:msg.sender,
             content:msg.content,
             profile:msg.profile,
-            optionText:chattime(msg.date)
+            optionText:chattime(msg.date),
+            option2Style:"inb-option2"
         }));
     });
     inboxoption.onclick = ()=>{
@@ -257,7 +275,8 @@ function loadInbox(){
             sender:data.sender,
             profile:data.profile,
             content:data.content,
-            optionText:chattime(data.date)
+            optionText:chattime(data.date),
+            option2Style:"inb-option2"
         });
         if(chdata && chdata == partner){
             inbitem.style.backgroundColor = "var(--ash)";

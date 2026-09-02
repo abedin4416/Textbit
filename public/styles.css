@@ -285,7 +285,23 @@ div{display:grid;}
     box-sizing: border-box;
     user-select: none;
 }
+.inbox-item-x{
+    grid-template-areas:
+        "left top top right fn"
+        "left bottom bottom right fn";
+    grid-template-columns: 2.3rem 1fr 1fr 3rem 2rem;
+    column-gap:0.7rem;
+    border-radius:0.5rem;
+    margin-top:1rem;
+    padding:0.5rem;
+    width:100%;
+    box-sizing: border-box;
+    user-select: none;
+}
 .inbox-item:hover{
+    background:var(--ash);
+}
+.inbox-item-x:hover{
     background:var(--ash);
 }
 .inb-icon{
@@ -314,6 +330,9 @@ div{display:grid;}
     font-weight:bold;
     justify-self: end;
 }
+.inb-option-x{
+    animation: moveLeft 0.2s ease-out forwards;
+}
 .add-known{
     background-image:url("res/add-known.png");
     background-size:70%;
@@ -338,6 +357,7 @@ div{display:grid;}
 
 .set-items{
     border-radius:0.5rem;
+    animation:riseUp 0.2s ease-out forwards;
 }
 .set-items:hover{
     background-color:var(--ash);
@@ -407,6 +427,17 @@ div{display:grid;}
     }
 }
 
+@keyframes moveLeft{
+    from{
+        transform:translateX(1rem);
+        opacity:0;
+    }
+    to{
+        transform:translateX(0);
+        opacity:1;
+    }
+}
+
 #message{
     width:100%;
     height:3rem;
@@ -430,4 +461,20 @@ div{display:grid;}
 }
 #sbtext{
     color:var(--black);
+}
+
+.inb-option2{
+    width:2rem;
+    height:2rem;
+    background-image:url("res/more.png");
+    background-repeat:no-repeat;
+    background-size:50%;
+    background-position: center;
+    grid-area:fn;
+    border-radius:3rem;
+    align-self:center;
+    animation: moveLeft 0.2s ease-out forwards;
+}
+.inb-option2:hover{
+    background-color:var(--d-ash);
 }
