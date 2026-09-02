@@ -254,7 +254,7 @@ search.onkeydown = async (e)=>{
         }));
     }
 }
-let chatAdded = false;
+window.chatAdded = false;
 function loadInbox(){
     authForm("hide");
     show(inboxwrapper, inboxcont, chatcont);
@@ -301,7 +301,7 @@ function loadInbox(){
             inbitem.style.backgroundColor = "var(--ash)";
             const cm = $("chat-messages")
             !chatAdded && cm.append(chatitem(data))
-            chatAdded = chatAdded? false:true;
+            chatAdded = false;
             const isAtBottom = cm.scrollHeight - cm.clientHeight <= cm.scrollTop + 100;
             if(isAtBottom){
                 cm.scrollTo({top: cm.scrollHeight,behavior: 'smooth'});
