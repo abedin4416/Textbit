@@ -197,7 +197,7 @@ function chatitem(data){
     const rcpt = data.seen? "seen":"sent";
     const btmtext = div("", "chat-sub", data.sender+" &nbsp;"+chattime(data.date));
     const receipt = div("", "receipt", rcpt);
-    content.innerHTML = text+btmtext;
+    content.innerHTML = text;
     return content;
 }
 
